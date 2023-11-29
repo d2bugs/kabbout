@@ -13,6 +13,8 @@ footer {visibility: hidden;}
 st.markdown(hide_streamlit_style, unsafe_allow_html=True)
 
 st.title("Kabbout :smiley:")
+# i wanna add a gif here
+st.markdown("""<iframe src="https://giphy.com/embed/l2JefM9MQ21ARH5tK" width="100%" height="350px" frameBorder="0" class="giphy-embed" allowFullScreen></iframe>""",unsafe_allow_html=True)
 # add players from 2-4
 st.sidebar.title("Add Players")
 player1 , player2, player3, player4 = None, None, None, None
@@ -32,33 +34,59 @@ if players in [None, []]:
 playerScores = None
 if players not in [None, []]:
     # add scores
-    st.title("Add Scores")
+    st.sidebar.title("Add Scores")
     if len(players) == 1:
         st.warning("Please add more players")
     if player1 not in [None, '']:
-        score1 = st.number_input(f"{player1.capitalize()}'s Score", value=0, step=50, min_value=0, max_value=1500, key="score1")
+        score1 = st.sidebar.number_input(f"{player1.capitalize()}'s Score", value=0, step=50, min_value=0, max_value=1500, key="score1")
         scores = [int(score1)]
     if player2 not in [None, '']:
-        score2 = st.number_input(f"{player2.capitalize()}'s Score", value=0, step=50, min_value=0, max_value=1500, key="score2")
+        score2 = st.sidebar.number_input(f"{player2.capitalize()}'s Score", value=0, step=50, min_value=0, max_value=1500, key="score2")
         scores = [int(score1), int(score2)]
     if player3 not in [None, '']:
-        score3 = st.number_input(f"{player3.capitalize()}'s Score", value=0, step=50, min_value=0, max_value=1500, key="score3")
+        score3 = st.sidebar.number_input(f"{player3.capitalize()}'s Score", value=0, step=50, min_value=0, max_value=1500, key="score3")
         scores = [int(score1), int(score2), int(score3)]
     if player4 not in [None, '']:
-        score4 = st.number_input(f"{player4.capitalize()}'s Score", value=0, step=50, min_value=0, max_value=1500, key="score4")
+        score4 = st.sidebar.number_input(f"{player4.capitalize()}'s Score", value=0, step=50, min_value=0, max_value=1500, key="score4")
         scores = [int(score1), int(score2), int(score3), int(score4)]
-    addScores = st.button("Add Scores")
+    addScores = st.sidebar.button("Add Scores")
     
         # remove empty scores
     playerScores = {player: score for player, score in zip(players, scores) if player != '' or score != 0}
     # table that doesnt have index column
     # sort dict by value
     playerScores = dict(sorted(playerScores.items(), key=lambda item: item[1],reverse=True))
-    findHighScore = max(playerScores.values())
-    findMidHighScore = max(playerScores.values())-50
-    findMidLowScore = min(playerScores.values())+50
-    findLowScore = min(playerScores.values())
-    
+    findMidHighScore , findMidHighScorePlayer = 0, 0
+    midHighPlayer = None
+    findHighScorePlayer = playerScores[max(playerScores, key=playerScores.get)]
+    # get player name with highest score
+    high = playerScores[max(playerScores)]
+    low = playerScores[min(playerScores, key=playerScores.get)]
+    # i wanna create a list of lists with the player name and score
+    # then sort the list by score
+    # then get the second highest score
+    # then get the player name with that score
+    # then get the second lowest score
+    # then get the player name with that score
+    PLAYERS = []
+    for player, score in playerScores.items():
+        PLAYERS.append([player, score])
+    PLAYERS.sort(key=lambda x: x[1], reverse=True)
+    findHighScore = PLAYERS[0][1]
+    findHighScorePlayer = PLAYERS[0][0]
+    findMidHighScore = PLAYERS[1][1]
+    findMidHighScorePlayer = PLAYERS[1][0]
+    findMidLowScore = PLAYERS[-2][1]
+    findMidLowScorePlayer = PLAYERS[-2][0]
+    findLowScore = PLAYERS[-1][1]
+    findLowScorePlayer = PLAYERS[-1][0]
     if playerScores not in [None, {}]:
         st.table(playerScores)
-        st.bar_chart(playerScores)
+        if scores != []:
+            # arrange from lowest to highest
+            st.bar_chart(playerScores)
+        st.title("Results")
+        st.write(f"L 7ALLOUF: {findLowScorePlayer} with **{findLowScore}**")
+        st.write(f"HAB YJI LOWEL: {findMidLowScorePlayer} with **{findMidLowScore}**")
+        st.write(f"YBET YHAREB: {findMidHighScorePlayer} with **{findMidHighScore}**")
+        st.write(f"KAHBET E TAWLA: {findHighScorePlayer} with **{findHighScore}**")
