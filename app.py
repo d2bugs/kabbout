@@ -1,7 +1,7 @@
 import streamlit as st
 
 
-st.set_page_config(layout="wide", page_title="Kabbout", page_icon=":smiley:",initial_sidebar_state="expanded")
+st.set_page_config(layout="wide", page_title="Kabbout 🃏", page_icon="🃏",initial_sidebar_state="expanded")
 hide_streamlit_style = """
 <style>
 button[data-testid="manage-app-button"] {visibility: hidden;}
@@ -11,8 +11,26 @@ footer {visibility: hidden;}
 </style>
 """
 st.markdown(hide_streamlit_style, unsafe_allow_html=True)
+# write js code to take user to #results when score is more than 1000
+js_code = """
+<script>
+'use strict';
+        // Function to scroll to #results
+        function scrollToResults() {
+            const resultsElement = document.getElementById('results');
+            if (resultsElement) {
+                resultsElement.scrollIntoView({
+                    behavior: 'smooth'
+                });
+            }
+        }
 
-st.title("Kabbout :smiley:")
+        // Call scrollToResults function when Streamlit app loads
+        window.addEventListener('load', scrollToResults);
+    </script>
+"""
+
+st.title("Kabbout 🃏")
 # i wanna add a gif here
 st.markdown("""<iframe src="https://giphy.com/embed/l2JefM9MQ21ARH5tK" width="100%" height="350px" frameBorder="0" class="giphy-embed" allowFullScreen></iframe>""",unsafe_allow_html=True)
 # add players from 2-4
@@ -98,21 +116,27 @@ if players not in [None, []]:
                 if scores != []:
                     # bar chart  arrange from lowest to highest
                     st.bar_chart(playerScores)
-                if findHighScore > 1000 and len(players) == 4:
+                if findHighScore >= 1000 and len(players) == 4:
+
                     st.title("Results")
+                    
+                    # create a css id for st.title
                     st.write(f"L 7ALLOUF: **{findLowScorePlayer}** with **{findLowScore}**")
                     st.write(f"HAB YJI LOWEL: **{findMidLowScorePlayer}** with **{findMidLowScore}**")
                     st.write(f"YBET YHAREB: **{findMidHighScorePlayer}** with **{findMidHighScore}**")
                     st.write(f"KAHBET E TAWLA: **{findHighScorePlayer}** with **{findHighScore}**")
                     st.balloons()
-                elif findHighScore > 1000 and len(players) == 3:
+                elif findHighScore >= 1000 and len(players) == 3:
                     st.title("Results")
+                    
                     st.write(f"L 7ALLOUF: **{findLowScorePlayer}** with **{findLowScore}**")
                     st.write(f"HAB YJI LOWEL: **{findMidLowScorePlayer}** with **{findMidLowScore}**")
                     st.write(f"KAHBET E TAWLA: **{findHighScorePlayer}** with **{findHighScore}**")
                     st.balloons()
-                elif findHighScore > 1000 and len(players) == 2:
+                elif findHighScore >= 1000 and len(players) == 2:
                     st.title("Results")
+                    
                     st.write(f"L 7ALLOUF: **{findLowScorePlayer}** with **{findLowScore}**")
                     st.write(f"KAHBET E TAWLA: **{findHighScorePlayer}** with **{findHighScore}**")
                     st.balloons()
+                st.markdown(js_code, unsafe_allow_html=True)
