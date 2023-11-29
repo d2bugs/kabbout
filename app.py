@@ -45,6 +45,7 @@ players = [player for player in players if player != '']
 if players in [None, []]:
     st.warning("Please add players")
 playerScores = None
+scores = None
 if players not in [None, []]:
     # add scores
     st.sidebar.title("Add Scores")
