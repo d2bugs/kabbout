@@ -64,8 +64,9 @@ if players not in [None, []]:
         scores = [int(score1), int(score2), int(score3), int(score4)]
     addScores = st.sidebar.button("Add Scores")
     
-        # remove empty scores
-    playerScores = {player: score for player, score in zip(players, scores) if player != '' or score != 0}
+    # remove empty scores
+    if scores != [] or scores != None:
+        playerScores = {player: score for player, score in zip(players, scores) if player != '' or score != 0}
     # table that doesnt have index column
     # sort dict by value
     playerScores = dict(sorted(playerScores.items(), key=lambda item: item[1],reverse=True))
