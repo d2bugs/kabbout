@@ -66,7 +66,7 @@ if players not in [None, []]:
     addScores = st.sidebar.button("Add Scores")
     
     # remove empty scores
-    if scores != [] or scores != None:
+    if scores != [] or scores != None and addScores:
         playerScores = {player: score for player, score in zip(players, scores) if player != '' or score != 0}
     # table that doesnt have index column
     # sort dict by value
