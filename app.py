@@ -55,16 +55,16 @@ if players not in [None, []] and len(players) > 1:
     if len(players) == 1:
         st.warning("Please add more players")
     if player1 not in [None, '']:
-        score1 = st.sidebar.number_input(f"{player1.capitalize()}'s Score", value=0, step=50, min_value=0, max_value=1500, key="score1")
+        score1 = st.sidebar.number_input(f"{player1.capitalize()}'s Score", value=0, step=50, min_value=-50, max_value=1500, key="score1")
         scores = [int(score1)]
     if player2 not in [None, '']:
-        score2 = st.sidebar.number_input(f"{player2.capitalize()}'s Score", value=0, step=50, min_value=0, max_value=1500, key="score2")
+        score2 = st.sidebar.number_input(f"{player2.capitalize()}'s Score", value=0, step=50, min_value=-50, max_value=1500, key="score2")
         scores = [int(score1), int(score2)]
     if player3 not in [None, '']:
-        score3 = st.sidebar.number_input(f"{player3.capitalize()}'s Score", value=0, step=50, min_value=0, max_value=1500, key="score3")
+        score3 = st.sidebar.number_input(f"{player3.capitalize()}'s Score", value=0, step=50, min_value=-50, max_value=1500, key="score3")
         scores = [int(score1), int(score2), int(score3)]
     if player4 not in [None, '']:
-        score4 = st.sidebar.number_input(f"{player4.capitalize()}'s Score", value=0, step=50, min_value=0, max_value=1500, key="score4")
+        score4 = st.sidebar.number_input(f"{player4.capitalize()}'s Score", value=0, step=50, min_value=-50, max_value=1500, key="score4")
         scores = [int(score1), int(score2), int(score3), int(score4)]
     addScores = st.sidebar.button("Add Scores")
     
