@@ -4,11 +4,11 @@ import streamlit as st
 st.set_page_config(layout="wide", page_title="Kabbout", page_icon=":smiley:",initial_sidebar_state="expanded")
 hide_streamlit_style = """
 <style>
+button[data-testid="manage-app-button"] {visibility: hidden;}
 button[kind="header"] {visibility: hidden;}
 #MainMenu {visibility: hidden;}
 footer {visibility: hidden;}
 </style>
-
 """
 st.markdown(hide_streamlit_style, unsafe_allow_html=True)
 
@@ -18,11 +18,24 @@ st.markdown("""<iframe src="https://giphy.com/embed/l2JefM9MQ21ARH5tK" width="10
 # add players from 2-4
 st.sidebar.title("Add Players")
 player1 , player2, player3, player4 = None, None, None, None
-player1 = st.sidebar.text_input("Player 1")
-# add a button to remove player
-player2 = st.sidebar.text_input("Player 2")
-player3 = st.sidebar.text_input("Player 3")
-player4 = st.sidebar.text_input("Player 4")
+known_players = st.sidebar.toggle("Known Players")
+if known_players:
+    players = st.sidebar.multiselect("Players",['Saleh','Morta','Achref','Mehdi','Abbes','Khalil','Sandra','Fatma'])
+    if len(players)==1:
+        st.warning("Please add more players")
+    if len(players)==2:
+        player1 , player2 = players[0], players[1]
+    if len(players)==3:
+        player1 , player2 , player3 = players[0], players[1], players[2]
+    elif len(players)==4:
+        player1 , player2 , player3 , player4 = players[0], players[1], players[2], players[3]
+else:
+    player1 = st.sidebar.text_input("Player 1")
+    # add a button to remove player
+    player2 = st.sidebar.text_input("Player 2")
+    player3 = st.sidebar.text_input("Player 3")
+    player4 = st.sidebar.text_input("Player 4")
+
 addPlayers = st.sidebar.button("Add Players")
 players = [player1, player2, player3, player4]
 
@@ -61,13 +74,9 @@ if players not in [None, []]:
     findHighScorePlayer = playerScores[max(playerScores, key=playerScores.get)]
     # get player name with highest score
     high = playerScores[max(playerScores)]
+    # get player name with lowest score
     low = playerScores[min(playerScores, key=playerScores.get)]
-    # i wanna create a list of lists with the player name and score
-    # then sort the list by score
-    # then get the second highest score
-    # then get the player name with that score
-    # then get the second lowest score
-    # then get the player name with that score
+
     PLAYERS = []
     for player, score in playerScores.items():
         PLAYERS.append([player, score])
@@ -83,10 +92,20 @@ if players not in [None, []]:
     if playerScores not in [None, {}]:
         st.table(playerScores)
         if scores != []:
-            # arrange from lowest to highest
-            st.bar_chart(playerScores)
-        st.title("Results")
-        st.write(f"L 7ALLOUF: {findLowScorePlayer} with **{findLowScore}**")
-        st.write(f"HAB YJI LOWEL: {findMidLowScorePlayer} with **{findMidLowScore}**")
-        st.write(f"YBET YHAREB: {findMidHighScorePlayer} with **{findMidHighScore}**")
-        st.write(f"KAHBET E TAWLA: {findHighScorePlayer} with **{findHighScore}**")
+            # bar chart  arrange from lowest to highest
+            st.bar_chart(scores)
+        if findHighScore > 1000 and len(players) == 4:
+            st.title("Results")
+            st.write(f"L 7ALLOUF: {findLowScorePlayer} with **{findLowScore}**")
+            st.write(f"HAB YJI LOWEL: {findMidLowScorePlayer} with **{findMidLowScore}**")
+            st.write(f"YBET YHAREB: {findMidHighScorePlayer} with **{findMidHighScore}**")
+            st.write(f"KAHBET E TAWLA: {findHighScorePlayer} with **{findHighScore}**")
+        elif findHighScore > 1000 and len(players) == 3:
+            st.title("Results")
+            st.write(f"L 7ALLOUF: {findLowScorePlayer} with **{findLowScore}**")
+            st.write(f"HAB YJI LOWEL: {findMidLowScorePlayer} with **{findMidLowScore}**")
+            st.write(f"KAHBET E TAWLA: {findHighScorePlayer} with **{findHighScore}**")
+        elif findHighScore > 1000 and len(players) == 2:
+            st.title("Results")
+            st.write(f"L 7ALLOUF: {findLowScorePlayer} with **{findLowScore}**")
+            st.write(f"KAHBET E TAWLA: {findHighScorePlayer} with **{findHighScore}**")
