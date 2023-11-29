@@ -12,23 +12,7 @@ footer {visibility: hidden;}
 """
 st.markdown(hide_streamlit_style, unsafe_allow_html=True)
 # write js code to take user to #results when score is more than 1000
-js_code = """
-<script>
-'use strict';
-        // Function to scroll to #results
-        function scrollToResults() {
-            const resultsElement = document.getElementById('results');
-            if (resultsElement) {
-                resultsElement.scrollIntoView({
-                    behavior: 'smooth'
-                });
-            }
-        }
 
-        // Call scrollToResults function when Streamlit app loads
-        window.addEventListener('load', scrollToResults);
-    </script>
-"""
 
 st.title("Kabbout 🃏")
 # i wanna add a gif here
@@ -36,7 +20,7 @@ st.markdown("""<iframe src="https://giphy.com/embed/l2JefM9MQ21ARH5tK" width="10
 # add players from 2-4
 st.sidebar.title("Add Players")
 player1 , player2, player3, player4 = None, None, None, None
-colors = ["#fd0", "#f0f", "#04f","#0f0"]
+
 known_players = st.sidebar.toggle("Known Players")
 if known_players:
     players = st.sidebar.multiselect("Players",['Saleh','Morta','Achref','Mehdi','Abbes','Khalil','Sandra','Fatma'])
@@ -61,28 +45,28 @@ players = [player1, player2, player3, player4]
 players = [player for player in players if player != '']
 # make names first letter capital
 
-if players in [None, []]:
+if players in [None, []] or len(players) == 1:
     st.warning("Please add players")
 playerScores = None
 scores = None
-if players not in [None, []]:
+if players not in [None, []] and len(players) > 1:
     # add scores
-    st.title("Add Scores")
+    st.sidebar.title("Add Scores")
     if len(players) == 1:
         st.warning("Please add more players")
     if player1 not in [None, '']:
-        score1 = st.number_input(f"{player1.capitalize()}'s Score", value=0, step=50, min_value=0, max_value=1500, key="score1")
+        score1 = st.sidebar.number_input(f"{player1.capitalize()}'s Score", value=0, step=50, min_value=0, max_value=1500, key="score1")
         scores = [int(score1)]
     if player2 not in [None, '']:
-        score2 = st.number_input(f"{player2.capitalize()}'s Score", value=0, step=50, min_value=0, max_value=1500, key="score2")
+        score2 = st.sidebar.number_input(f"{player2.capitalize()}'s Score", value=0, step=50, min_value=0, max_value=1500, key="score2")
         scores = [int(score1), int(score2)]
     if player3 not in [None, '']:
-        score3 = st.number_input(f"{player3.capitalize()}'s Score", value=0, step=50, min_value=0, max_value=1500, key="score3")
+        score3 = st.sidebar.number_input(f"{player3.capitalize()}'s Score", value=0, step=50, min_value=0, max_value=1500, key="score3")
         scores = [int(score1), int(score2), int(score3)]
     if player4 not in [None, '']:
-        score4 = st.number_input(f"{player4.capitalize()}'s Score", value=0, step=50, min_value=0, max_value=1500, key="score4")
+        score4 = st.sidebar.number_input(f"{player4.capitalize()}'s Score", value=0, step=50, min_value=0, max_value=1500, key="score4")
         scores = [int(score1), int(score2), int(score3), int(score4)]
-    addScores = st.button("Add Scores")
+    addScores = st.sidebar.button("Add Scores")
     
     # remove empty scores
     if scores not in [None, []]:
@@ -119,7 +103,6 @@ if players not in [None, []]:
                 if findHighScore >= 1000 and len(players) == 4:
 
                     st.title("Results")
-                    
                     # create a css id for st.title
                     st.write(f"L 7ALLOUF: **{findLowScorePlayer}** with **{findLowScore}**")
                     st.write(f"HAB YJI LOWEL: **{findMidLowScorePlayer}** with **{findMidLowScore}**")
@@ -128,15 +111,12 @@ if players not in [None, []]:
                     st.balloons()
                 elif findHighScore >= 1000 and len(players) == 3:
                     st.title("Results")
-                    
                     st.write(f"L 7ALLOUF: **{findLowScorePlayer}** with **{findLowScore}**")
                     st.write(f"HAB YJI LOWEL: **{findMidLowScorePlayer}** with **{findMidLowScore}**")
                     st.write(f"KAHBET E TAWLA: **{findHighScorePlayer}** with **{findHighScore}**")
                     st.balloons()
                 elif findHighScore >= 1000 and len(players) == 2:
                     st.title("Results")
-                    
                     st.write(f"L 7ALLOUF: **{findLowScorePlayer}** with **{findLowScore}**")
                     st.write(f"KAHBET E TAWLA: **{findHighScorePlayer}** with **{findHighScore}**")
                     st.balloons()
-                st.markdown(js_code, unsafe_allow_html=True)
