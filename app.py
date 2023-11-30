@@ -13,6 +13,16 @@ footer {visibility: hidden;}
 st.markdown(hide_streamlit_style, unsafe_allow_html=True)
 # write js code to take user to #results when score is more than 1000
 
+def setCookie(name,value,days):
+    js_code = """
+    <script>
+    // Function to set a cookie
+    function setCookie(name, value, days) {const expires = new Date();
+        expires.setTime(expires.getTime() + ({days}} * 24 * 60 * 60 * 1000));
+        document.cookie = '${name}=${value};expires=${expires.toUTCString()};path=/';
+    }
+    """.format(days=days,name=name,value=value)
+    st.markdown(js_code,unsafe_allow_html=True)
 
 st.title("Kabbout 🃏")
 # i wanna add a gif here
@@ -72,6 +82,7 @@ if players not in [None, []] and len(players) > 1:
     if scores not in [None, []]:
         if len(players) == len(scores) ^ addScores:
             playerScores = {player: score for player, score in zip(players, scores) if player != '' or score != 0}
+            setCookie("playerScores",playerScores,2)
             # table that doesnt have index column
             # sort dict by value
             playerScores = dict(sorted(playerScores.items(), key=lambda item: item[1],reverse=True))
@@ -120,3 +131,4 @@ if players not in [None, []] and len(players) > 1:
                     st.write(f"L 7ALLOUF: **{findLowScorePlayer}** with **{findLowScore}**")
                     st.write(f"KAHBET E TAWLA: **{findHighScorePlayer}** with **{findHighScore}**")
                     st.balloons()
+        
