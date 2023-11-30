@@ -18,10 +18,10 @@ def setCookie(name,value,days):
     <script>
     // Function to set a cookie
     function setCookie(name, value, days) {const expires = new Date();
-        expires.setTime(expires.getTime() + ({days}} * 24 * 60 * 60 * 1000));
-        document.cookie = '${name}=${value};expires=${expires.toUTCString()};path=/';
+        expires.setTime(expires.getTime() + ({}} * 24 * 60 * 60 * 1000));
+        document.cookie = '${}=${};expires=${expires.toUTCString()};path=/';
     }
-    """.format(days=days,name=name,value=value)
+    """.format(days,name,value)
     st.markdown(js_code,unsafe_allow_html=True)
 
 st.title("Kabbout 🃏")
