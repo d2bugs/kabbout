@@ -1,4 +1,5 @@
 import streamlit as st
+import json
 
 
 st.set_page_config(layout="wide", page_title="Kabbout 🃏", page_icon="🃏",initial_sidebar_state="expanded")
@@ -10,19 +11,8 @@ button[kind="header"] {visibility: hidden;}
 footer {visibility: hidden;}
 </style>
 """
+st.session_state.playersScores = {}
 st.markdown(hide_streamlit_style, unsafe_allow_html=True)
-# write js code to take user to #results when score is more than 1000
-
-def setCookie(name,value,days):
-    js_code = """
-    <script>
-    // Function to set a cookie
-    function setCookie(name, value, days) {const expires = new Date();
-        expires.setTime(expires.getTime() + ({}} * 24 * 60 * 60 * 1000));
-        document.cookie = '${}=${};expires=${expires.toUTCString()};path=/';
-    }
-    """.format(days,name,value)
-    st.markdown(js_code,unsafe_allow_html=True)
 
 st.title("Kabbout 🃏")
 # i wanna add a gif here
@@ -31,9 +21,14 @@ st.markdown("""<iframe src="https://giphy.com/embed/l2JefM9MQ21ARH5tK" width="10
 st.sidebar.title("Add Players")
 player1 , player2, player3, player4 = None, None, None, None
 
-known_players = st.sidebar.toggle("Known Players")
+known_players = st.sidebar.toggle("New Players")
 if known_players:
-    players = st.sidebar.multiselect("Players",['Saleh','Morta','Achref','Mehdi','Abbes','Khalil','Sandra','Fatma'])
+    player1 = st.sidebar.text_input("Player 1",key='player1')
+    player2 = st.sidebar.text_input("Player 2",key='player2')
+    player3 = st.sidebar.text_input("Player 3",key='player3')
+    player4 = st.sidebar.text_input("Player 4",key='player4')
+else:
+    players = st.sidebar.multiselect("Players",['Saleh','Morta','Achref','Mehdi','Abbes','Khalil','Sandra','Fatma'],['Saleh','Morta','Achref'])
     if len(players)==1:
         st.warning("Please add more players")
     if len(players)==2:
@@ -42,16 +37,8 @@ if known_players:
         player1 , player2 , player3 = players[0], players[1], players[2]
     elif len(players)==4:
         player1 , player2 , player3 , player4 = players[0], players[1], players[2], players[3]
-else:
-    player1 = st.sidebar.text_input("Player 1")
-    # add a button to remove player
-    player2 = st.sidebar.text_input("Player 2")
-    player3 = st.sidebar.text_input("Player 3")
-    player4 = st.sidebar.text_input("Player 4")
 
 addPlayers = st.sidebar.button("Add Players")
-players = [player1, player2, player3, player4]
-
 players = [player for player in players if player != '']
 # make names first letter capital
 
@@ -77,15 +64,18 @@ if players not in [None, []] and len(players) > 1:
         score4 = st.sidebar.number_input(f"{player4.capitalize()}'s Score", value=0, step=50, min_value=-50, max_value=1500, key="score4")
         scores = [int(score1), int(score2), int(score3), int(score4)]
     addScores = st.sidebar.button("Add Scores")
-    
+
     # remove empty scores
     if scores not in [None, []]:
         if len(players) == len(scores) ^ addScores:
             playerScores = {player: score for player, score in zip(players, scores) if player != '' or score != 0}
-            setCookie("playerScores",playerScores,2)
             # table that doesnt have index column
             # sort dict by value
             playerScores = dict(sorted(playerScores.items(), key=lambda item: item[1],reverse=True))
+            playerScores = {player.capitalize(): score for player, score in playerScores.items()}
+            playerScores = {player: score for player, score in playerScores.items() if player != '' or score != 0}
+            # write json data to file
+            
             findMidHighScore , findMidHighScorePlayer = 0, 0
             midHighPlayer = None
             findHighScorePlayer = playerScores[max(playerScores, key=playerScores.get)]
@@ -112,7 +102,6 @@ if players not in [None, []] and len(players) > 1:
                     # bar chart  arrange from lowest to highest
                     st.bar_chart(playerScores)
                 if findHighScore >= 1000 and len(players) == 4:
-
                     st.title("Results")
                     # create a css id for st.title
                     st.write(f"L 7ALLOUF: **{findLowScorePlayer}** with **{findLowScore}**")
